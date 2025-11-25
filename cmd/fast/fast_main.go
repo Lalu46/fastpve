@@ -20,7 +20,7 @@ func main() {
 				Name:  "version",
 				Usage: "show version",
 				Action: func(c *cli.Context) error {
-					fmt.Println("0.0.5")
+					fmt.Println(version)
 					return nil
 				},
 			},

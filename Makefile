@@ -1,14 +1,18 @@
 GO ?= go
 GOOS ?= $(shell go env GOOS)
 GOARCH ?= $(shell go env GOARCH)
-BUILD_FLAGS ?= -trimpath -a -ldflags "-s -w -extldflags '-static'"
+VERSION ?=
+LD_FLAGS_BASE ?= -s -w -extldflags '-static'
+BUILD_FLAGS ?= -trimpath -a -ldflags "$(LD_FLAGS_BASE)"
 BIN_DIR ?= bin
 BINARY ?= $(BIN_DIR)/FastPVE
 CMD ?= ./cmd/fast
 WORKFILE ?= go.work
 WORKFILE_ABS := $(abspath $(WORKFILE))
+RELEASE_BINARY ?= $(BIN_DIR)/FastPVE-$(VERSION)
+VERSION_FILE ?= $(BIN_DIR)/version.txt
 
-.PHONY: all build build-remote clean
+.PHONY: all build build-remote clean release validate-version
 
 all: build
 
@@ -24,4 +28,20 @@ $(BIN_DIR):
 	mkdir -p $(BIN_DIR)
 
 clean:
-	rm -f $(BINARY)
+	rm -f $(BINARY) $(VERSION_FILE) $(BIN_DIR)/FastPVE-*
+
+release: validate-version $(VERSION_FILE)
+
+validate-version:
+	@if [ -z "$(strip $(VERSION))" ]; then \
+		echo "VERSION is required (e.g. VERSION=0.1.5)"; \
+		exit 1; \
+	fi
+
+$(RELEASE_BINARY): $(BIN_DIR) $(WORKFILE)
+	GOOS=$(GOOS) GOARCH=$(GOARCH) GOWORK=$(WORKFILE_ABS) $(GO) build -trimpath -a -ldflags "$(LD_FLAGS_BASE) -X main.version=$(VERSION)" -tags HAS_REMOTE_URL -o $@ $(CMD)
+
+$(VERSION_FILE): $(RELEASE_BINARY)
+	@echo "VERSION=$(VERSION)" > $@
+	@echo "" >> $@
+	@echo "FASTPVE_SHA256=$$(sha256sum $(RELEASE_BINARY) | awk '{print $$1}')" >> $@
