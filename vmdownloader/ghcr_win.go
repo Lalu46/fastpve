@@ -9,9 +9,12 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync/atomic"
+	"time"
 
 	"github.com/kspeeder/blobDownload/blobDownloader"
 	"github.com/kspeeder/docker-registry/lib"
+	"github.com/linkease/fastpve/utils"
 )
 
 const (
@@ -70,7 +73,7 @@ func fetchGHCRArtifact(ctx context.Context, reference, isoPath string) (string, 
 		return dest, nil
 	}
 
-	temp := dest + ".part"
+	temp := dest + ".syn"
 	start := int64(0)
 	if info, err := os.Stat(temp); err == nil {
 		start = info.Size()
@@ -97,9 +100,15 @@ func fetchGHCRArtifact(ctx context.Context, reference, isoPath string) (string, 
 	}
 	defer reader.Close()
 
-	if _, err := io.Copy(out, reader); err != nil {
+	var written int64
+	stopCh := make(chan struct{})
+	go reportGHCRProgress(entry.Name, entry.Size, start, &written, stopCh)
+
+	if _, err := io.Copy(io.MultiWriter(out, &progressWriter{counter: &written}), reader); err != nil {
+		close(stopCh)
 		return "", err
 	}
+	close(stopCh)
 	if err := out.Sync(); err != nil {
 		return "", err
 	}
@@ -188,4 +197,38 @@ func parseRegistryReference(reference string) (host, repo, tag string, err error
 	repo = remainder[:colon]
 	tag = remainder[colon+1:]
 	return host, repo, tag, nil
+}
+
+type progressWriter struct {
+	counter *int64
+}
+
+func (p *progressWriter) Write(b []byte) (int, error) {
+	n := len(b)
+	if p.counter != nil {
+		atomic.AddInt64(p.counter, int64(n))
+	}
+	return n, nil
+}
+
+func reportGHCRProgress(name string, total, start int64, written *int64, stopCh <-chan struct{}) {
+	ticker := time.NewTicker(10 * time.Second)
+	defer ticker.Stop()
+	lastBytes := start
+	lastTime := time.Now()
+	for {
+		select {
+		case <-stopCh:
+			return
+		case <-ticker.C:
+			curr := atomic.LoadInt64(written) + start
+			delta := curr - lastBytes
+			elapsed := time.Since(lastTime).Seconds()
+			speed := float64(delta) / (elapsed + 1e-6)
+			percent := curr * 100 / (total + 1)
+			fmt.Printf("GHCR downloading %s: %02d%%, %s/s\n", name, percent, utils.ByteCountDecimal(uint64(speed)))
+			lastBytes = curr
+			lastTime = time.Now()
+		}
+	}
 }
