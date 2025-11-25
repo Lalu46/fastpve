@@ -49,6 +49,7 @@ func DownloadWindowsISO(ctx context.Context, d Downloader, quickGetPath, isoPath
 
 	urlStr, totalSize, modTime, err := resolveWindowsURL(ctx, d, quickGetPath, tag, winVer, editionName)
 	if err != nil {
+		fmt.Println("Resolve Windows download URL failed:", err, "\n尝试使用 GHCR 作为备用下载源...")
 		target, ghcrErr := downloadWindowsFromGHCR(ctx, isoPath, version, editionName)
 		if ghcrErr == nil {
 			return target, nil
@@ -69,8 +70,10 @@ func DownloadWindowsISO(ctx context.Context, d Downloader, quickGetPath, isoPath
 
 func resolveWindowsURL(ctx context.Context, d Downloader, quickGetPath, tag, winVer, editionName string) (string, int64, time.Time, error) {
 	args := []string{"--url", "windows", winVer, editionName}
-	fmt.Println("获取下载URL...")
-	urlStr, _ := quickget.GetSystemURL(ctx, quickGetPath, args)
+	fmt.Println("获取下载URL，30s 超时...")
+	ctx2, cancel := context.WithTimeout(ctx, 30*time.Second)
+	defer cancel()
+	urlStr, _ := quickget.GetSystemURL(ctx2, quickGetPath, args)
 	if urlStr != "" {
 		if err := d.PutRemoteURL(ctx, tag, urlStr); err != nil && !errors.Is(err, downloader.ErrRemoteURLCacheDisabled) {
 			return "", 0, time.Time{}, err
