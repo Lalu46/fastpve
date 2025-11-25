@@ -84,6 +84,9 @@ func downloadWindows(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 	edition := strings.TrimSpace(cmd.String("edition"))
+	if version == Win7 && edition == "" {
+		edition = "English Enterprise"
+	}
 	if edition == "" {
 		return errors.New("edition is required")
 	}

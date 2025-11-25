@@ -17,9 +17,9 @@ func TestGHCRWin10Metadata(t *testing.T) {
 		t.Skip("set RUN_GHCR_META=1 to enable GHCR metadata check")
 	}
 
-	ref := ghcrWindowsReference(1)
-	if ref == "" {
-		t.Fatalf("ghcrWindowsReference returned empty for Win10")
+	ref, err := ghcrWindowsReference(Win10, "Chinese (Simplified)")
+	if err != nil {
+		t.Fatalf("ghcrWindowsReference returned error for Win10: %v", err)
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)

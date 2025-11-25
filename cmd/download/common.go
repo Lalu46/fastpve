@@ -12,6 +12,12 @@ const (
 	defaultCachePath = "/var/lib/vz/template/cache"
 )
 
+const (
+	Win11 = iota
+	Win10
+	Win7
+)
+
 func ensureDirs(paths ...string) error {
 	for _, p := range paths {
 		if err := os.MkdirAll(p, 0755); err != nil {
@@ -28,9 +34,11 @@ func defaultStatusPath(cachePath, name string) string {
 func parseWindowsVersion(v string) (int, error) {
 	switch strings.TrimSpace(strings.ToLower(v)) {
 	case "11", "win11", "windows11":
-		return 0, nil
+		return Win11, nil
 	case "10", "win10", "windows10":
-		return 1, nil
+		return Win10, nil
+	case "7", "win7", "windows7":
+		return Win7, nil
 	default:
 		return -1, fmt.Errorf("unknown windows version: %s", v)
 	}

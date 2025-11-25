@@ -15,6 +15,12 @@ import (
 	"github.com/linkease/fastpve/utils"
 )
 
+const (
+	Win11 = iota
+	Win10
+	Win7
+)
+
 // DownloadWindowsISO resumes a pending download when status is provided, or starts a new download for the given version/edition.
 // version should match the quickget expectation (e.g. 0 for Win11, 1 for Win10).
 func DownloadWindowsISO(ctx context.Context, d Downloader, quickGetPath, isoPath, statusPath string, status *downloader.DownloadStatus, version int, editionName string) (string, error) {
@@ -24,8 +30,16 @@ func DownloadWindowsISO(ctx context.Context, d Downloader, quickGetPath, isoPath
 		return downloadAndMove(ctx, d, statusPath, status, realPath)
 	}
 
-	if version < 0 || editionName == "" {
-		return "", errors.New("windows version or edition missing")
+	if version < 0 {
+		return "", errors.New("windows version missing")
+	}
+
+	if version == Win7 {
+		return downloadWindowsFromGHCR(ctx, isoPath, version, editionName)
+	}
+
+	if editionName == "" {
+		return "", errors.New("windows edition missing")
 	}
 
 	// Clean up old status files before starting a fresh download.

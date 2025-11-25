@@ -22,12 +22,9 @@ const (
 )
 
 func downloadWindowsFromGHCR(ctx context.Context, isoPath string, version int, edition string) (string, error) {
-	if !strings.EqualFold(edition, "Chinese (Simplified)") {
-		return "", fmt.Errorf("GHCR fallback currently available only for Chinese (Simplified)")
-	}
-	ref := ghcrWindowsReference(version)
-	if ref == "" {
-		return "", fmt.Errorf("unsupported Windows version for GHCR: %d", version)
+	ref, err := ghcrWindowsReference(version, edition)
+	if err != nil {
+		return "", err
 	}
 
 	mirror := strings.TrimSpace(os.Getenv("FASTPVE_GHCR_MIRROR"))
@@ -168,14 +165,27 @@ func swapRegistryHost(reference, host string) string {
 	return fmt.Sprintf("%s/%s:%s", host, repo, tag)
 }
 
-func ghcrWindowsReference(version int) string {
+func ghcrWindowsReference(version int, edition string) (string, error) {
 	switch version {
-	case 0:
-		return "ghcr.io/kspeeder/win11x64:cn_simplified"
-	case 1:
-		return "ghcr.io/kspeeder/win10x64:cn_simplified"
+	case Win11:
+		if !strings.EqualFold(edition, "Chinese (Simplified)") {
+			return "", fmt.Errorf("GHCR Windows 11 仅支持 Chinese (Simplified)")
+		}
+		return "ghcr.io/kspeeder/win11x64:cn_simplified", nil
+	case Win10:
+		if !strings.EqualFold(edition, "Chinese (Simplified)") {
+			return "", fmt.Errorf("GHCR Windows 10 仅支持 Chinese (Simplified)")
+		}
+		return "ghcr.io/kspeeder/win10x64:cn_simplified", nil
+	case Win7:
+		// Only English Enterprise available for Win7 package.
+		if edition != "" && !strings.EqualFold(edition, "English Enterprise") {
+			return "", fmt.Errorf("GHCR Windows 7 仅支持 English Enterprise")
+		}
+		edition = "English Enterprise"
+		return "ghcr.io/kspeeder/win7x64:en_enterprise", nil
 	default:
-		return ""
+		return "", fmt.Errorf("unsupported Windows version for GHCR: %d", version)
 	}
 }
 

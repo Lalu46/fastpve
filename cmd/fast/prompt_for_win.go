@@ -22,11 +22,13 @@ var winEditions = []string{
 	"Chinese (Traditional)",
 	"English (United States)",
 	"English International",
+	"English Enterprise",
 }
 
 const (
 	Win11 = iota
 	Win10
+	Win7
 )
 
 type windowsInstallInfo struct {
@@ -202,8 +204,18 @@ func promptWinFiles(info *windowsInstallInfo,
 		name = fmt.Sprintf("继续下载 %s(%02d%%)", name, progress)
 		windows = append(windows, name)
 	}
-	windows = append(windows, "全新下载 Windows11")
-	windows = append(windows, "全新下载 Windows10")
+	newOptions := []struct {
+		Label   string
+		Version int
+	}{
+		{"全新下载 Windows11", Win11},
+		{"全新下载 Windows10", Win10},
+		{"全新下载 Windows7 (Enterprise 英文)", Win7},
+	}
+	startNew := len(windows)
+	for _, opt := range newOptions {
+		windows = append(windows, opt.Label)
+	}
 	prompt := promptui.Select{
 		Label: "选择Windows安装文件",
 		Items: windows,
@@ -215,31 +227,49 @@ func promptWinFiles(info *windowsInstallInfo,
 	var selWin bool
 	if idx < origWinLen {
 		info.WindowISO = file
-	} else {
-		if status != nil && idx == (len(windows)-3) {
-			info.WindowISO = status.TargetFile
-		} else if idx >= (len(windows) - 2) {
-			selWin = true
-			info.WinVersion = idx - (len(windows) - 2)
+	} else if status != nil && idx == origWinLen {
+		info.WindowISO = status.TargetFile
+	} else if idx >= startNew {
+		selWin = true
+		opt := newOptions[idx-startNew]
+		info.WinVersion = opt.Version
+		if opt.Version == Win7 {
+			info.WinEdition = findEditionIndex("English Enterprise")
+		} else {
 			err = promptWinEdition(info)
 			if err != nil {
 				return err
 			}
 		}
+	} else {
+		// Should not reach.
 	}
+
 	if !selWin {
 		prompt := promptui.Select{
 			Label: "选择系统：",
-			Items: []string{"11", "10"},
+			Items: []string{"11", "10", "7"},
 		}
 		idx, _, err := prompt.Run()
 		if err != nil {
 			return err
 		}
 		info.WinVersion = idx
+		if info.WinVersion == Win7 && info.WinEdition < 0 {
+			info.WinEdition = findEditionIndex("English Enterprise")
+		}
 	}
 
 	return nil
+}
+
+func findEditionIndex(name string) int {
+	for i, v := range winEditions {
+		if v == name {
+			return i
+		}
+	}
+	return -1
 }
 
 func promptWinEdition(info *windowsInstallInfo) error {
@@ -314,12 +344,14 @@ func createWindowVM(ctx context.Context, info *windowsInstallInfo) error {
 		vmid = items[len(items)-1].VMID + 1
 	}
 	winID := 10
-	var tpmStr string
-	if info.WinVersion == Win11 {
+	tpmStr := `echo win10`
+	switch info.WinVersion {
+	case Win11:
 		winID = 11
 		tpmStr = fmt.Sprintf(`qm set $VMID -tpmstate0 %s:1,version=v2.0`, useDisk)
-	} else {
-		tpmStr = `echo win10`
+	case Win7:
+		winID = 7
+		tpmStr = `echo win7`
 	}
 	winName := filepath.Base(info.WindowISO)
 	vmName := toBetterWindowName(winName)
