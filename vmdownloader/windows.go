@@ -49,7 +49,11 @@ func DownloadWindowsISO(ctx context.Context, d Downloader, quickGetPath, isoPath
 
 	urlStr, totalSize, modTime, err := resolveWindowsURL(ctx, d, quickGetPath, tag, winVer, editionName)
 	if err != nil {
-		return "", err
+		target, ghcrErr := downloadWindowsFromGHCR(ctx, isoPath, version, editionName)
+		if ghcrErr == nil {
+			return target, nil
+		}
+		return "", fmt.Errorf("resolve windows url: %w; GHCR fallback: %v", err, ghcrErr)
 	}
 
 	status = &downloader.DownloadStatus{

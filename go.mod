@@ -4,6 +4,8 @@ go 1.24.4
 
 require (
 	github.com/kspeeder/urlcache v0.0.0-20251125050822-bf2b496b4f24
+	github.com/kspeeder/blobDownload v0.0.0
+	github.com/kspeeder/docker-registry v0.0.0-20251123150517-9065e6afc698
 	github.com/manifoldco/promptui v0.9.0
 	github.com/urfave/cli/v2 v2.27.6
 	github.com/urfave/cli/v3 v3.6.1
@@ -16,3 +18,6 @@ require (
 	github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1 // indirect
 	golang.org/x/sys v0.33.0 // indirect
 )
+
+replace github.com/kspeeder/blobDownload => ../blobDownload
+replace github.com/kspeeder/docker-registry => ../docker-registry
